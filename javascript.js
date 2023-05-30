@@ -1,80 +1,46 @@
-let computerSelection = ""
-let playerSelection = ""
-let playerScore = 0;
-let computerScore = 0;
 const choices = ["rock", "paper", "scissors"]
+//let computerSelection = getComputerChoice();
+//let playerSelection = getPlayerChoice();
 
-console.log(game());
-
-
-
-function game() {
-    for (let i = 1; i < 6; i++) {
-        console.log("Round: " + i);
-        console.log(playRound(getPlayerChoice(), getComputerChoice()));
+function getPlayerChoice() {
+    while (true){
+        let choice = (prompt("Select rock, paper, or scissors."));
+        if (choice == null) return "";
+        choice = choice.toLowerCase();
+        if (choice != "rock" && choice != "paper" && choice != "scissors") {
+            alert("Invalid entry, please try again.");
+        }
+        else return choice;
     }
-    return "Player score: " + playerScore + ", Computer score: " + computerScore;
+
 }
 
 function getComputerChoice() {
-    return choices[Math.floor(Math.random() * 3)];
+    return choices[Math.floor((Math.random() * 3))];
 }
 
-function getPlayerChoice() {
-    let valid = false;
-    do {
-        playerSelection = prompt("Choose: Rock, Paper, Scissors").toLowerCase();
-        if (playerSelection == "rock" || playerSelection == "paper" || playerSelection == "scissors") {
-            valid = true;
-        }
-        else {
-            alert("Error! Please make a valid selection");
-        }
+function playRound(playerSelection, computerSelection){
+    if (playerSelection == "") return "Round cancelled.";
+    return (playerSelection == computerSelection) ? `${playerSelection} against ${computerSelection} results in a tie!` :
+    (playerSelection == "rock") ? (computerSelection == "paper") ? `${playerSelection} beats ${computerSelection}, you win!` : `${computerSelection} beats ${playerSelection}, you lose!` :
+    (playerSelection == "paper") ? (computerSelection == "rock") ? `${playerSelection} beats ${computerSelection}, you win!` : `${computerSelection} beats ${playerSelection}, you lose!` : 
+    (computerSelection == "paper") ? `${playerSelection} beats ${computerSelection}, you win!` : `${computerSelection} beats ${playerSelection}, you lose!`;
+}
+
+function game(){
+    let playerScore = 0;
+    let computerScore = 0;
+    for (let i = 0; i < 5; i ++){
+        let result = playRound(getPlayerChoice(), getComputerChoice());
+        let scoring = result.slice(-5).trim();
+        console.log(result);
+        if (scoring == "win!") playerScore++;
+        else if (scoring == "lose!") computerScore++;
     }
-    while (valid == false);
-    return playerSelection;
+    console.log(`Player score: ${playerScore}, Computer score: ${computerScore}`)
+    if (playerScore > computerScore) console.log("Player wins!");
+    else if (playerScore < computerScore) console.log("Computer wins!");
+    else console.log("Tie game!");
 }
 
-function playRound(playerSelection, computerSelection) {
-    console.log("Player: " + playerSelection);
-    console.log("Computer: " + computerSelection);
-
-    switch(playerSelection){
-        case "rock":
-            if (computerSelection == "scissors") {
-                playerScore ++;
-                return "Player wins!";
-            }
-            else if (computerSelection == "paper") {
-                computerScore ++;
-                return "Computer wins!";
-            }
-            else {
-                return "Tie!";
-            }
-        case "paper":
-            if (computerSelection == "rock") {
-                playerScore ++;
-                return "Player wins!";
-            }
-            else if (computerSelection == "scissors") {
-                computerScore ++;
-                return "Computer wins!";
-            }
-            else {
-                return "Tie!";
-            }
-        case "scissors":
-            if (computerSelection == "paper") {
-                playerScore ++;
-                return "Player wins!";
-            }
-            else if (computerSelection == "rock") {
-                computerScore ++;
-                return "Computer wins!";
-            }
-            else {
-                return "Tie!";
-            }
-    }
-}
+game();
