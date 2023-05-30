@@ -1,19 +1,13 @@
 const choices = ["rock", "paper", "scissors"]
-//let computerSelection = getComputerChoice();
-//let playerSelection = getPlayerChoice();
+let playerScore = 0;
+let computerScore = 0;
 
-function getPlayerChoice() {
-    while (true){
-        let choice = (prompt("Select rock, paper, or scissors."));
-        if (choice == null) return "";
-        choice = choice.toLowerCase();
-        if (choice != "rock" && choice != "paper" && choice != "scissors") {
-            alert("Invalid entry, please try again.");
-        }
-        else return choice;
-    }
+const buttons = document.querySelectorAll('button');
+const result = document.getElementById('result');
+const playerScoreText = document.getElementById('playerScore');
+const computerScoreText = document.getElementById('computerScore');
 
-}
+
 
 function getComputerChoice() {
     return choices[Math.floor((Math.random() * 3))];
@@ -27,20 +21,19 @@ function playRound(playerSelection, computerSelection){
     (computerSelection == "paper") ? `${playerSelection} beats ${computerSelection}, you win!` : `${computerSelection} beats ${playerSelection}, you lose!`;
 }
 
-function game(){
-    let playerScore = 0;
-    let computerScore = 0;
-    for (let i = 0; i < 5; i ++){
-        let result = playRound(getPlayerChoice(), getComputerChoice());
-        let scoring = result.slice(-5).trim();
-        console.log(result);
-        if (scoring == "win!") playerScore++;
-        else if (scoring == "lose!") computerScore++;
-    }
-    console.log(`Player score: ${playerScore}, Computer score: ${computerScore}`)
-    if (playerScore > computerScore) console.log("Player wins!");
-    else if (playerScore < computerScore) console.log("Computer wins!");
-    else console.log("Tie game!");
-}
 
-game();
+buttons.forEach((button) => {
+    button.addEventListener('click', function () {
+        let round = playRound(this.textContent.toLowerCase(), getComputerChoice());
+        result.innerHTML = round;
+        let scoring = round.slice(-5).trim();
+        if (scoring == "win!") {
+            playerScore++;
+            playerScoreText.innerHTML = `Player Score: ${playerScore}`;
+        }
+        else if (scoring == "lose!") {
+            computerScore++;
+            computerScoreText.innerHTML = `Computer Score: ${computerScore}`;
+        }
+    });
+});
